@@ -265,9 +265,9 @@ def get_parser():
 
     __version__ = 0.1
     parser = argparse.ArgumentParser(version=__version__)
-    parser.add_argument("jobdir", type=str,
+    parser.add_argument("jobdir", type=str, default='./',
                         help='path to a complete FALCON job directory')
-    parser.add_argument("--nproc", type=int, default=8)
+    parser.add_argument("--nproc", type=int, default=4)
     parser.add_argument('--debug', action='store_true',
                         help="Print debug logging to stdout")
 
