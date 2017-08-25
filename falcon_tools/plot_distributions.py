@@ -14,23 +14,25 @@ import matplotlib
 from matplotlib import pyplot as plt
 import pandas
 
+from falcon_tools import utils
+
 matplotlib.style.use('ggplot')
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
 
-def run(cmd, cwd):
-    """Run shell process"""
-    log.debug("Running cmd %s", cmd)
+#def run(cmd, cwd):
+#    """Run shell process"""
+#    log.debug("Running cmd %s", cmd)
 
-    process = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
-    stdout, stderr = process.communicate()
+#    process = subprocess.Popen(
+#        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+#    stdout, stderr = process.communicate()
 
-    if stderr:
-        log.debug(stderr)
+#    if stderr:
+#        log.debug(stderr)
 
-    return stdout.rstrip(), stderr
+#    return stdout.rstrip(), stderr
 
 
 def get_overlaps(jobdir, nproc):
@@ -44,7 +46,7 @@ def get_overlaps(jobdir, nproc):
     cmd = ['fc_ovlp_stats', '--n_core', str(nproc), '--fofn', lasfofn]
 
     cwd = os.path.join(jobdir, '2-asm-falcon')
-    stdout, stderr = run(cmd, cwd)
+    stdout, stderr = utils.run(cmd, cwd, log)
     if stderr:
         log.debug(stderr)
 
@@ -92,7 +94,7 @@ def get_length_distribution(dbpath):
     log.info("Getting lengths from %s ", dbpath)
     cmd = ['DBdump', '-h', dbpath]
     cwd = os.path.dirname(os.path.dirname(dbpath))
-    stdout, stderr = run(cmd, cwd)
+    stdout, stderr = utils.run(cmd, cwd, log)
     length_list = []
     if stderr:
         log.debug(stderr)
@@ -176,22 +178,22 @@ def plot_dual_lengths(rlens, plens):
     plt.savefig(outfig)
 
 
-def setup_log(alog, level=logging.INFO, file_name=None, log_filter=None,
-              str_formatter='[%(levelname)s] %(asctime)-15s '
-                            '[%(funcName)s %(lineno)d] '
-                            '%(message)s'):
-    """Core Util to setup log handler"""
-    alog.setLevel(logging.DEBUG)
-    if file_name is None:
-        handler = logging.StreamHandler(sys.stdout)
-    else:
-        handler = logging.FileHandler(file_name)
-    formatter = logging.Formatter(str_formatter)
-    handler.setFormatter(formatter)
-    handler.setLevel(level)
-    if log_filter:
-        handler.addFilter(log_filter)
-    alog.addHandler(handler)
+#def setup_log(alog, level=logging.INFO, file_name=None, log_filter=None,
+#              str_formatter='[%(levelname)s] %(asctime)-15s '
+#                            '[%(funcName)s %(lineno)d] '
+#                            '%(message)s'):
+#    """Core Util to setup log handler"""
+#    alog.setLevel(logging.DEBUG)
+#    if file_name is None:
+##        handler = logging.StreamHandler(sys.stdout)
+#    else:
+#        handler = logging.FileHandler(file_name)
+#    formatter = logging.Formatter(str_formatter)
+#    handler.setFormatter(formatter)
+#    handler.setLevel(level)
+#    if log_filter:
+#        handler.addFilter(log_filter)
+#    alog.addHandler(handler)
 
 
 def validate_falcon_root(dirpath):
@@ -232,9 +234,9 @@ def main():
     debug = args.debug
     jobdir = os.path.abspath(jobdir)
     if debug:
-        setup_log(log, file_name='log.out', level=logging.DEBUG)
+        utils.setup_log(log, file_name='plot_distrib.out', level=logging.DEBUG)
     else:
-        setup_log(log, file_name='log.out', level=logging.INFO)
+        utils.setup_log(log, file_name='plot_distrib.out', level=logging.INFO)
 
     outdir = os.path.join(jobdir, 'outfigs')
     
