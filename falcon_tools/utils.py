@@ -1,6 +1,6 @@
+import sys
 import logging
 import subprocess
-
 
 def setup_log(alog, level=logging.INFO, file_name=None, log_filter=None,
               str_formatter='[%(levelname)s] %(asctime)-15s ' \

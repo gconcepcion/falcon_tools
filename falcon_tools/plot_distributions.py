@@ -21,20 +21,6 @@ log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
 
-#def run(cmd, cwd):
-#    """Run shell process"""
-#    log.debug("Running cmd %s", cmd)
-
-#    process = subprocess.Popen(
-#        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
-#    stdout, stderr = process.communicate()
-
-#    if stderr:
-#        log.debug(stderr)
-
-#    return stdout.rstrip(), stderr
-
-
 def get_overlaps(jobdir, nproc):
     """Get overlap distributions"""
     log.info("Gathering overlap stats")
@@ -178,24 +164,6 @@ def plot_dual_lengths(rlens, plens):
     plt.savefig(outfig)
 
 
-#def setup_log(alog, level=logging.INFO, file_name=None, log_filter=None,
-#              str_formatter='[%(levelname)s] %(asctime)-15s '
-#                            '[%(funcName)s %(lineno)d] '
-#                            '%(message)s'):
-#    """Core Util to setup log handler"""
-#    alog.setLevel(logging.DEBUG)
-#    if file_name is None:
-##        handler = logging.StreamHandler(sys.stdout)
-#    else:
-#        handler = logging.FileHandler(file_name)
-#    formatter = logging.Formatter(str_formatter)
-#    handler.setFormatter(formatter)
-#    handler.setLevel(level)
-#    if log_filter:
-#        handler.addFilter(log_filter)
-#    alog.addHandler(handler)
-
-
 def validate_falcon_root(dirpath):
     """ Validate which distributions we can create """
     raw_reads_db = os.path.join(dirpath, '0-rawreads/raw_reads.db')
@@ -229,14 +197,15 @@ def validate_falcon_root(dirpath):
 def main():
     """Generate Read length Distribution and Overlap stat distribution"""
     args = get_parser()
-    jobdir = args.jobdir
+    jobdir = os.path.abspath(args.jobdir)
     nproc = args.nproc
     debug = args.debug
-    jobdir = os.path.abspath(jobdir)
+    logfile = args.log 
+
     if debug:
-        utils.setup_log(log, file_name='plot_distrib.out', level=logging.DEBUG)
+        utils.setup_log(log, file_name=logfile, level=logging.DEBUG)
     else:
-        utils.setup_log(log, file_name='plot_distrib.out', level=logging.INFO)
+        utils.setup_log(log, file_name=logfile, level=logging.INFO)
 
     outdir = os.path.join(jobdir, 'outfigs')
     
@@ -249,14 +218,19 @@ def main():
 
     if raw:
         raw_lengths = plot_length_distribution_raw(jobdir)
+
     if pread:
         pread_lengths = plot_length_distribution_preads(jobdir)
+
     if raw and pread:
         plot_dual_lengths(raw_lengths, pread_lengths)
+
     if overlaps:
         plot_ovlp_stats(jobdir, nproc)
+
     if not raw and not pread and not overlaps:
         log.info("No data found, are you sure %s is a FALCON job_root?", jobdir)
+
     log.info("Finished! Find your plots here: %s", outdir)
 
     return
@@ -267,9 +241,10 @@ def get_parser():
 
     __version__ = 0.1
     parser = argparse.ArgumentParser(version=__version__)
-    parser.add_argument("jobdir", type=str, default='./',
+    parser.add_argument("jobdir", type=str, nargs="?", default='./',
                         help='path to a complete FALCON job directory')
     parser.add_argument("--nproc", type=int, default=4)
+    parser.add_argument("--log", type=str, default=None)
     parser.add_argument('--debug', action='store_true',
                         help="Print debug logging to stdout")
 
