@@ -12,7 +12,7 @@ log.setLevel(logging.INFO)
 
 
 def main():
-    """Generate Read length Distribution and Overlap stat distribution"""
+    """Clean a fasta file"""
     args = get_parser()
     fastafile = os.path.abspath(args.fastafile)
     debug = args.debug

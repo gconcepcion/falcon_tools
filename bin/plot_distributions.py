@@ -15,7 +15,6 @@ from falcon_tools import utils
 matplotlib.use('agg')
 from matplotlib import pyplot as plt
 
-
 matplotlib.style.use('ggplot')
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
