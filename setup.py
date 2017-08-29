@@ -21,10 +21,10 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     install_requires=[
                   'pandas==0.20.3',
-                  'matplotlib==1.5.0',
+                  'matplotlib==2.0.2',
                   'pbcore'
                         ],
-    scripts=['bin/plot_distributions.py', 'bin/clean_fasta.py']
+    scripts=['bin/plot_distributions.py', 'bin/clean_fasta.py', 'bin/get_homologs.py']
     #entry_points={'console_scripts': ['falcon_probe = falcon_probe.cli:main']}
 )
 
