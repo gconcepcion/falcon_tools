@@ -9,11 +9,12 @@ import sys
 import logging
 import argparse
 
-import matplotlib
-from matplotlib import pyplot as plt
 import pandas
-
+import matplotlib
 from falcon_tools import utils
+matplotlib.use('agg')
+from matplotlib import pyplot as plt
+
 
 matplotlib.style.use('ggplot')
 log = logging.getLogger(__name__)
