@@ -50,7 +50,7 @@ def clean_fasta(fastafile, log):
     with open(output, 'w') as outfile:
         for record in reads:
             if record.sequence:
-                outfile.write('>{r}\n{s}'.format(
+                outfile.write('>{r}\n{s}\n'.format(
                     r=record.header, s=record.sequence))
             else:
                 log.info("Dropped!: %s", record.header)
