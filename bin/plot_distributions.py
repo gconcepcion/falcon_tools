@@ -12,11 +12,10 @@ import argparse
 import pandas
 import matplotlib
 from falcon_tools import utils
-matplotlib.style.use('ggplot')
-#matplotlib.use('agg')
+matplotlib.use('agg')
 from matplotlib import pyplot as plt
+matplotlib.style.use('ggplot')
 
-#matplotlib.style.use('ggplot')
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 

@@ -32,7 +32,7 @@ def _get_mummer_bins():
     for binary in mummer_bins:
         version4check = "{s}4".format(s=binary)
         try:
-            x = subprocess.call([version4check], stdout=devnull, stderr=devnull)
+            subprocess.call([version4check], stdout=devnull, stderr=devnull)
             binlist.append(version4check)
         except OSError as e:
             log.debug("{s} Not found. falling back to {r}".format(s=version4check, r=binary))
