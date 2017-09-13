@@ -25,7 +25,7 @@ def _get_mummer_bins():
        so this is a little messy. My MUMmer 4.0.0 bins are all suffixed with 4 so this just 
        does a quick check.
     """
-    mummer_bins =  ["nucmer", "show-snps", "delta-filter"]
+    mummer_bins =  ["nucmer", "show-coords", "delta-filter"]
     binlist=[]
 
     for binary in mummer_bins:
