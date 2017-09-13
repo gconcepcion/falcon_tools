@@ -22,30 +22,32 @@ log.setLevel(logging.INFO)
 
 def _get_mummer_bins():
     """I install this into an environment where both MUMmer 3.23 & MUMmer 4.0.0 co-exist
-       so this is a little messy. My MUMmer 4.0.0 bins are all suffixed with 4 so this just 
+       so this is a little messy. My MUMmer 4.0.0 bins are all suffixed with 4 so this just
        does a quick check.
     """
     mummer_bins =  ["nucmer", "show-coords", "delta-filter"]
     binlist=[]
+    devnull = open(os.devnull, 'w')
 
     for binary in mummer_bins:
         version4check = "{s}4".format(s=binary)
         try:
-            subprocess.call([version4check])
+            x = subprocess.call([version4check], stdout=devnull, stderr=devnull)
             binlist.append(version4check)
         except OSError as e:
             log.debug("{s} Not found. falling back to {r}".format(s=version4check, r=binary))
 
             try:
-                subprocess.call([binary])
+                subprocess.call([binary], stdout=devnull, stderr=devnull)
                 binlist.append(binary)
             except OSError as e:
                 log.error("{s} not found. Please ensure MUMmer 4.0.0 binaries are in your $PATH".format(s=binary))
 
-   
+
     return binlist[0], binlist[1], binlist[2]
 
 NUCMER_BIN, SHOW_COORDS_BIN, DELTA_FILTER_BIN = _get_mummer_bins()
+
 
 def run_nucmer(reference, queries, threads):
     """run nucmer for each reference against all queries"""
